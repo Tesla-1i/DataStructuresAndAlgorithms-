@@ -1,4 +1,5 @@
 #include<iostream>
+#include<ctime>
 using namespace std;
 typedef int Rank;	//秩
 #define DEFALT_CAPACITY 3	//默认的初始容量
@@ -42,12 +43,13 @@ public:
 		delete[] _elem;
 	}
 	//只读接口
+	void print()const;
 	Rank size()const{ return _size; }		//规模
 	bool empty()const{ return !_size; }		//判空
 	int disordered()const;		//判断是否已排序
 	Rank find(T const&e)const{ return find(e, 0, (Rank)_size); }	//无序向量整体查找
 	Rank find(T const&e, Rank lo, Rank hi)const;	//无序向量区间查找
-	Rank binSearch(T*A, T const& e, Rank lo, Rank hi);
+	Rank binSearch(T*A, T const& e, Rank lo, Rank hi)const;
 	Rank search(T const&e)const{ return (0 >= _size) ? -1 : search(e, (Rank)0, (Rank)_size); }	//有序向量整体查找
 	Rank search(T const&e, Rank lo, Rank hi)const;		//有序向量区间查找
 	//可访问的接口
@@ -193,7 +195,7 @@ template<class T> int Vector<T>::uniquify(){
 }
 
 //在【lo，hi）查找e
-template<class T> Rank Vector<T>::binSearch(T*A, T const& e, Rank lo, Rank hi){
+template<class T> Rank Vector<T>::binSearch(T*A, T const& e, Rank lo, Rank hi)const{
 	while (lo < hi){
 		Rank mi = (lo + hi) >> 1;		//以中轴为中点
 		(e < A[mi]) ? hi = mi : lo = mi + 1;	//分界
@@ -205,14 +207,18 @@ template<class T> Rank Vector<T>::binSearch(T*A, T const& e, Rank lo, Rank hi){
 }
 
 template<class T> Rank Vector<T>::search(T const&e, Rank lo, Rank hi)const{
-	return binSearch(_elem, e, lo, hi);
+	Rank retu= binSearch(_elem, e, lo, hi);
+	return retu;
 }
 
 template<class T>void Vector<T>::sort(Rank lo, Rank hi){
 	switch (rand() % 2){
-	case 1: bubbleSort(lo, hi); break;
-	case 2: mergSort(lo, hi); break;
+	case 0: bubbleSort(lo, hi); 
+		cout << "冒泡排序";	break;
+	case 1: mergSort(lo, hi);
+		cout << "归并排序";	break;
 	}
+
 }
 
 template<class T> void Vector<T>::bubbleSort(Rank lo, Rank hi){
@@ -252,6 +258,39 @@ template<class T>void Vector<T>::merge(Rank lo, Rank mi, Rank hi){
 	delete[] B;
 }//归并后得到完整有序向量【lo，hi）
 
+template<class T>void Vector<T>::print()const{
+	for (int i = 0; i < _size; i++)
+		cout << _elem[i] << "\t";
+}
+
 int main(){
+	int *array = new int[10];
+	for (int i = 0; i < 10; i++)
+		array[i] = 10 - i;
+	Vector<int> vectorByArray(array, 1, 8);
+	vectorByArray.print();
+	int size = vectorByArray.size();
+	cout << "规模是： " << size<<"\n";
+	int order = vectorByArray.disordered();
+	cout << "是否已排序： " << order<<"\n";
+	int search = vectorByArray.search(11);
+	cout << "是否有11： " << search<<"\n";
+	Vector<int> vectorByCopy = vectorByArray;
+	cout << "拷贝得到的： ";
+	vectorByCopy.print();
+	vectorByArray.remove(2, 4);
+	cout << "\n删除【2,4）元素后";
+	vectorByArray.print();
+	vectorByArray.insert(0, 1);
+	cout << "首位插入1 ";
+	vectorByArray.print();
+	vectorByArray.unsort();
+	cout << "\n整体置乱:";
+	vectorByArray.print();
+	cout << "\n无序去重： ";
+	vectorByArray.print();
+	cout << "\n整体排序:";
+	vectorByArray.sort();
+	vectorByArray.print();
 	return 0;
 }
