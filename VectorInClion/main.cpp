@@ -1,4 +1,5 @@
 #include<iostream>
+#include <ctime>
 using namespace std;
 typedef int Rank;	//秩
 #define DEFALT_CAPACITY 3	//默认的初始容量
@@ -12,7 +13,7 @@ protected:
 	bool bubble(Rank lo, Rank hi);	//扫描交换
 	void bubbleSort(Rank lo, Rank hi);		//气泡排序
 	//Rank max(Rank lo, Rank hi);		//选取最大元素
-	Rank selectionSort(Rank lo, Rank hi);		//选择排序
+	//Rank selectionSort(Rank lo, Rank hi);		//选择排序
 	void merge(Rank lo, Rank mi, Rank hi);		//归并算法
 	void mergSort(Rank lo, Rank hi);		//归并排序
 	//Rank partition(Rank lo, Rank hi);		//轴点构造
@@ -253,5 +254,6 @@ template<class T>void Vector<T>::merge(Rank lo, Rank mi, Rank hi){
 }//归并后得到完整有序向量【lo，hi）
 
 int main(){
+    cout<<"测试";
 	return 0;
 }

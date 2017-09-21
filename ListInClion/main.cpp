@@ -1,6 +1,7 @@
-#include<iostream>
+#include <iostream>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -45,20 +46,15 @@ public:
     Rank size()const{ return _size; }
     bool empty()const{ return _size <= 0; }
     //T& operator[](Rank r)const;
-    ListNode<T>* operator[](Rank r)const;
+    ListNode<T>* &operator[](Rank r)const;
     ListNode<T>* first()const{ return header->succ; }	//返回首节点，不是头结点
     ListNode<T>* last()const{ return trailer->pred; }	//返回末节点，不是尾节点
     bool valid(ListNode<T>* p){
         return p && (p != trailer) && (p != header);	//判断位置p是否对外合法
     }
     int disordered()const;		//判断是否已经排序
-    ListNode<T>* find(T const&e, int n, ListNode<T>* p)const{	//无序区间查找
-        //在p的n个前驱中找到等于e的最后者
-        while (0<n--)		//自右到左
-            if (e == (p = p->pred)->data) return p;
-        return NULL;
-    }
-    ListNode<T>* find(T const&e)const{		//无序列表查找
+    ListNode<T>* find(T const&e, int n, ListNode<T>* p)const;
+    ListNode<T>* find(T const&e)const {
         return find(e, _size, trailer);
     }
     ListNode<T>* search(T const&e, int n, ListNode<T>*p)const;	//有序区间查找
@@ -82,8 +78,9 @@ public:
     int uniquify();		//有序去重
     void reverse();		//前后倒置
     //遍历
-    //void traverse(void(*)(T&));	//遍历，依次visit操作（函数指针）
     template<class VST> void traverse(VST&); //遍历，依次visit操作（函数对象）
+    void traverse(void(*)(T&));	//遍历，依次visit操作（函数指针）
+
 };
 
 template<class T>void List<T>::init(){
@@ -92,7 +89,7 @@ template<class T>void List<T>::init(){
     trailer->pred = header;		trailer->succ = NULL;
     _size = 0;
 }
-template<class T> ListNode<T>* List<T>::operator[](Rank r)const{
+template<class T> ListNode<T>*& List<T>::operator[](Rank r)const{
     ListNode<T>* p = first();		//从首节点开始
     while (0 < r--)		//后置--
         p = p->succ;
@@ -118,14 +115,14 @@ template <class T>ListNode<T>* List<T>::insertB(ListNode<T> *p, T const &e) {
 
 //将e插入当前节点前
 template <class T>ListNode<T>* ListNode<T>::insertAsPred(T const &e) {
-    ListNode<T>* x=new ListNode(e,pred,this);
-    pred->succ=x; pred=x;   //设置正向连接， 注意理解？？？？？？？？？？？？？？
+    ListNode<T>* x = new ListNode(e, pred, this);
+    pred->succ = x; pred = x;   //设置正向连接， 注意理解？？？？？？？？？？？？？？
     return x;       //返回新节点的位置
 }
 //将e插入当前节点之后
 template <class T>ListNode<T>* ListNode<T>::insertAsSucc(T const &e) {
-    ListNode<T>* x=new ListNode(e,this,succ);
-    succ->pred=x;   succ=x;
+    ListNode<T>* x = new ListNode(e, this, succ);
+    succ->pred = x;   succ = x;
     return x;
 }
 
@@ -134,22 +131,25 @@ template <class T>ListNode<T>* ListNode<T>::insertAsSucc(T const &e) {
 template <class T>void List<T>::copyNodes(ListNode<T> *p, int n) {
     init();
     while (n--){
-        insertAsLast(p->data);  p=p->succ;      //将p及之后项作为末节点插入
+        insertAsLast(p->data);  p = p->succ;      //将p及之后项作为末节点插入
     }
 }
 template <class T>List<T>::List(ListNode<T> *p, int n) {
-    copyNodes(p,n);
+    copyNodes(p, n);
 }
 template <class T>List<T>::List(List<T> const &L, int r, int n) {
     //ListNode<T>* l=L->operator[](r);
-    //copyNodes(L[r],n);
-    //有问题？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+    copyNodes(L[r], n);      //原先出错因为重载【】时，返回的不是引用
+    //有问题？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？？
+}
+template <class T>List<T>::List(List<T> const &L) {
+    copyNodes(L.first(), L._size);
 }
 
 //删除节点p，返回数值
 template <class T>T List<T>::remove(ListNode<T> *p) {
-    T e=p->data;
-    p->pred->succ=p->succ; p->succ->pred=p->pred;       //后继，前驱  注意理解！！！！！
+    T e = p->data;
+    p->pred->succ = p->succ; p->succ->pred = p->pred;       //后继，前驱  注意理解！！！！！
     delete p;   _size--;
     return e;
 }
@@ -158,7 +158,7 @@ template <class T>List<T>::~List() {
     clear(); delete header; delete trailer;
 }
 template <class T>int List<T>::clear() {
-    int oldSize=_size;      //清空链表。
+    int oldSize = _size;      //清空链表。
     while (0<_size)
         remove(header->succ);
     return oldSize;
@@ -166,48 +166,48 @@ template <class T>int List<T>::clear() {
 
 //唯一化
 template <class T>int List<T>::deduplicate() {
-    if(_size<2)return 0;
-    int oldSize=_size;
-    ListNode<T>* p=header;  Rank r=0;   //p从首节点开始
-    while (trailer!=(p=p->succ)){       //依次直达末节点
-        ListNode<T>* q=find(p->data,r,p);//p的r个前驱中查找雷同者
-        q?remove(q):r++;                 //若存在，则删除
+    if (_size<2)return 0;
+    int oldSize = _size;
+    ListNode<T>* p = header;  Rank r = 0;   //p从首节点开始
+    while (trailer != (p = p->succ)){       //依次直达末节点
+        ListNode<T>* q = find(p->data, r, p);//p的r个前驱中查找雷同者
+        q ? remove(q) : r++;                 //若存在，则删除
     }
-    return oldSize-_size;
+    return oldSize - _size;
 }
 //遍历
-//template <class T>void List<T>::traverse(void (*visit)(T &)) {
-//    for (ListNode<T>* p=header->succ;p!=trailer;p=p->succ)
-//        visit(p->data);
-//}
+template <class T>void List<T>::traverse(void(*visit)(T&)) {
+    for (ListNode<T>* p = header->succ; p != trailer; p = p->succ)
+        visit(p->data);
+}
 
-//template <class T>template <class VST> void List<T>::traverse(VST &visit) {
-//    for (ListNode<T>*p=header->succ;p!=trailer;p=p->succ)
-//        visit(p->data);
-//}
-//
-//template <class T>struct Increase{
-//    virtual void operator()(T& e){ e++;}
-//};
-//template <class T>void incerase(List<T>& L){
-//    L.traverse(Increase<T>());
-//}
+template <class T>template <class VST> void List<T>::traverse(VST& visit) {
+    for (ListNode<T>*p = header->succ; p != trailer; p = p->succ)
+        visit(p->data);
+}
+
+template <class T>struct Increase{
+    virtual void operator()(T& e){ e++; }
+};
+template <class T>void incerase(List<T>& L){
+    L.traverse(Increase<T>());
+}
 
 //唯一化
 template <class T>int List<T>::uniquify() {
-    if(_size<2) return 0;
-    int oldSize=_size;
-    ListNode<T>* p=first(); ListNode<T>* q;     //
-    while (trailer!=(q=p->succ))    //q为p后继
-        if (p->data!=q->data) p=q;  //若互不相等，转向下一lun
+    if (_size<2) return 0;
+    int oldSize = _size;
+    ListNode<T>* p = first(); ListNode<T>* q;     //
+    while (trailer != (q = p->succ))    //q为p后继
+        if (p->data != q->data) p = q;  //若互不相等，转向下一lun
         else remove(q);     //删除
-    return oldSize-_size;
+    return oldSize - _size;
 }
 
 template <class T>ListNode<T>* List<T>::search(T const &e, int n, ListNode<T> *p) const {
     //在p的n个前驱中找到不大于e的最后者
     while (0<n--){      //自右到左
-        if(((p=p->pred)->data)<=e) break;
+        if (((p = p->pred)->data) <= e) break;
     }
     return p;
 }
@@ -216,62 +216,92 @@ template <class T>ListNode<T>* List<T>::search(T const &e, int n, ListNode<T> *p
 template <class T>void List<T>::sort(ListNode<T> *p, int n) {
     //列表区间排序
     //srand((int)time(0));???????????????????????????????????????????????????????????????
-
+    //int i=std::rank();
+    switch (rand() % 3){
+        case 1:insertSort(p, n); break;
+        case 2:selectionSort(p, n); break;
+        case 3:mergeSort(p, n); break;
+    }
 }
 //起始于p的n个元素
 template <class T>void List<T>::insertSort(ListNode<T> *p, int n) {
-    for (int r=0;r<n;r++){
-        insertA(search(p->data,r,p),p->data);
-        p=p->succ; remove(p->pred);     //转向下一个
+    for (int r = 0; r<n; r++){
+        insertA(search(p->data, r, p), p->data);
+        p = p->succ; remove(p->pred);     //转向下一个
     }
 }
 
 template <class T> void List<T>::selectionSort(ListNode<T> *p, int n) {
-    ListNode<T>* head=p->pred; ListNode<T>* tail=p;
-    for (int i=0;i<n;i++)
-        tail=tail->succ;    //待排序区间（head，tail）
+    ListNode<T>* head = p->pred; ListNode<T>* tail = p;
+    for (int i = 0; i<n; i++)
+        tail = tail->succ;    //待排序区间（head，tail）
     while (1<n){
         //在至少还剩两个节点前
-        ListNode<T>* max=selectMax(head->succ,n);
-        insertB(tail,remove(max));  //将其移到无序区间末尾，（作为有序区间首元素）
-        tail=tail->pred;n--;
+        ListNode<T>* max = selectMax(head->succ, n);
+        insertB(tail, remove(max));  //将其移到无序区间末尾，（作为有序区间首元素）
+        tail = tail->pred; n--;
     }
 }
 
-template <class T>static bool lt(T&a,T&b){ return a<b;}
+template <class T>static bool lt(T&a, T&b){ return a<b; }
 template <class T>ListNode<T>* List<T>::selectMax(ListNode<T> *p, int n) {
-    ListNode<T>* max=p; //暂定为p
-    for (ListNode<T>* cur=p;1<n;n--){
-        if(!lt((cur=cur->succ)->data,max->data))
-            max=cur;
+    ListNode<T>* max = p; //暂定为p
+    for (ListNode<T>* cur = p; 1<n; n--){
+        if (!lt((cur = cur->succ)->data, max->data))
+            max = cur;
     }
     return max;
 }
 
 template <class T>void List<T>::merge(ListNode<T> *&p, int n, List<T> &L, ListNode<T> *q, int m) {
     //当前列表自p起n个元素，与L列表自q起m个元素归并
-    ListNode<T> pp=p->pred;
+    ListNode<T> pp = p->pred;
     while (0<m){    //q尚未移除区间
-        if((0<n)&&(p->data<=q->data)){  //若p仍在区间，且V(p)<=V(q)
-            if(q==(p=p->succ)) break; n--;//p归入合并列表，并替换为其直接后继
-        } else{ //若p已超出右界，或V(q)<V(p)
-            insertB(p,L.remove((q=q->succ)->pred)); m--;    //将q转移至p之前
+        if ((0<n) && (p->data <= q->data)){  //若p仍在区间，且V(p)<=V(q)
+            if (q == (p = p->succ)) break; n--;//p归入合并列表，并替换为其直接后继
+        }
+        else{ //若p已超出右界，或V(q)<V(p)
+            insertB(p, L.remove((q = q->succ)->pred)); m--;    //将q转移至p之前
         }
     }
-    p=pp.succ;      //确定归并后的新起点
+    p = pp.succ;      //确定归并后的新起点
 }
 
 template <class T> void List<T>::mergeSort(ListNode<T> *&p, int n) {
-    if(n<2)return;
-    int m=n>>1; //以中点为界
-    ListNode<T>* q=p; for (int i=0;i<m;i++)q=q->succ;   //均分列表
-    mergeSort(p,m); mergeSort(q,n-m);       //对前后分别进行排序
-    merge(p,m,*this,q,n-m);     //归并
+    if (n<2)return;
+    int m = n >> 1; //以中点为界
+    ListNode<T>* q = p; for (int i = 0; i<m; i++)q = q->succ;   //均分列表
+    mergeSort(p, m); mergeSort(q, n - m);       //对前后分别进行排序
+    merge(p, m, *this, q, n - m);     //归并
 }//注意，排序后，p依然指向归并后区间新起点
 
-int main(){
-    cout<<"测试";
+template <class T> int List<T>::disordered() const {
+    int n = 0; ListNode<T>* p = first();
+    for (int i = 0; i<_size - 1; p = p->succ, i++){
+        if (p->data>p->succ->data) n++;
+    }
+    return n;   //返回逆序对数
 }
+
+template <class T>
+ListNode<T> *List<T>::find(const T &e, int n, ListNode<T> *p) const {	//无序区间查找
+    //在p的n个前驱中找到等于e的最后者
+    while (0<n--)		//自右到左
+        if (e == (p = p->pred)->data) return p;
+    return NULL;
+}
+
+template <class T> void List<T>::reverse() {
+    if (_size < 2) return; //平凡情况
+    for (ListNode<T>* p = header; p; p = p->pred) //自前向后，依次
+        swap(p->pred, p->succ); //交换各节点的前驱、后继指针
+    swap(header, trailer); //头、尾节点互换
+}
+int main(){
+    cout << "测试";
+}
+
+
 
 
 

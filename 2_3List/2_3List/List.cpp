@@ -1,5 +1,6 @@
 //不带头结点的单链表
 #include<iostream>
+#include<stack>
 using namespace std;
 template<class T>class ListNode{
 public:
@@ -15,6 +16,7 @@ public:
 	List(){ init(); }
 	ListNode<T>* insert(T const& e);	//作为末节点插入List,返回尾指针trailer。
 	void reverse();		//倒置
+	//ListNode<T>* insertAsPred(ListNode<T>* Node,ListNode<T>* nowNode);	//将Node插在nowNode前面；
 	//只读函数
 	void print();	//打印
 	int getSize(){ return _size; }
@@ -45,8 +47,24 @@ template<class T>void List<T>::print(){
 		p = p->succ;
 	}cout << "\n";
 }
+
+
 template<class T>void List<T>::reverse(){
+	/*stack<T>* temp = new stack<T>;
+	ListNode<T>* p = header;
+	while (p != NULL){
+		temp->push(p->data);
+		p = p->succ;
+	}
+	p = header;
+	while (p != NULL){
+		p->data = temp->top();
+		p = p->succ;
+		temp->pop();
+	}*/
+	
 	//迭代版本
+	//头插入方法
 	ListNode<T>* prev = NULL;	//保存当前的头结点
 	ListNode<T>* tmp = NULL;	//保存当前结点的succ
 	while (header != NULL){		
