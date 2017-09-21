@@ -128,7 +128,7 @@ int main(){
 	cout << "顺序表是： \n";
 	arrayList->print();
 	deleteMin(arrayList);
-	cout << "删除最小值后，\n";
+	cout << "删除最小值后，尾元素插过去\n";
 	arrayList->print();
 	cout << "输入删除元素的值 ";
 	float v; cin >> v;
