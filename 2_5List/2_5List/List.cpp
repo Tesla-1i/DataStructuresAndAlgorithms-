@@ -76,40 +76,82 @@ template<class T>void List<T>::reverse(){
 }
 
 template<class T>void List<T>::merge(List<T>* List1){
-	ListNode<T>* head, *p, *q, *p1, *q1, *temp;	//临时头结点
+	//当不进行倒置，直接归并时，可以进行头插入，小的为头，大的插在头前面，头再前移
+	ListNode<T>* head, *p, *q,*p1,*q1;	//head为新的头指针
 	p = header; q = List1->header;
-	if (header->data >= List1->header->data){
-		head = header; p = p->succ;
+	if ((header->data) < (List1->header->data)){
+		head = header;	p = header->succ;
 	}
 	else{
-		head = List1->header; q = q->succ;
+		head = List1->header;	q = q->succ;
 	}
-	temp = head;
+	trailer = head;		//插入的第一个结点将是最后一个
+	trailer->succ = NULL;	//既然是尾节点，那摩后继是NULL，否则打印时没有终止
 	while (p&&q){
-		if (p->data >= q->data){
+		if (p->data < q->data){
 			p1 = p->succ;
-			temp->succ = p;
-			temp = p;
+			p->succ = head;
+			head = p;
 			p = p1;
 		}
 		else{
 			q1 = q->succ;
-			temp->succ = q;
-			temp = q;
+			q->succ = head;
+			head = q;
 			q = q1;
 		}
 	}
-	if (p == NULL){
-		temp->succ = q;	temp = q;
+	if (p == NULL){		//q还有剩余，一个个头插到head前面
+		while (q){
+			q1 = q->succ;
+			q->succ = head;
+			head = q;
+			q = q1;
+		}
 	}
-	if (q == NULL){
-		temp->succ = p;	temp = p;
+	else{
+		p1 = p->succ;
+		p->succ = head;
+		head = p;
+		p = p1;
 	}
-	header = head;	//header仍是头结点
-	while (temp->succ != NULL){
-		temp = temp->succ;
-	}
-	trailer = temp;	//尾指针也正常了
+	header = head;	//head是头指针
+
+
+	//ListNode<T>* head, *p, *q, *p1, *q1, *temp;	//临时头结点
+	//p = header; q = List1->header;
+	//if (header->data >= List1->header->data){
+	//	head = header; p = p->succ;
+	//}
+	//else{
+	//	head = List1->header; q = q->succ;
+	//}
+	//temp = head;
+	//while (p&&q){
+	//	if (p->data >= q->data){
+	//		p1 = p->succ;
+	//		temp->succ = p;
+	//		temp = p;
+	//		p = p1;
+	//	}
+	//	else{
+	//		q1 = q->succ;
+	//		temp->succ = q;
+	//		temp = q;
+	//		q = q1;
+	//	}
+	//}
+	//if (p == NULL){
+	//	temp->succ = q;	temp = q;
+	//}
+	//if (q == NULL){
+	//	temp->succ = p;	temp = p;
+	//}
+	//header = head;	//header仍是头结点
+	//while (temp->succ != NULL){
+	//	temp = temp->succ;
+	//}
+	//trailer = temp;	//尾指针也正常了
 }
 
 int main(){
@@ -139,8 +181,8 @@ int main(){
 	cout << "链表是： ";
 	fList1->print();
 	//////////////////////
-	fList->reverse();
-	fList1->reverse();
+	//fList->reverse();
+	//fList1->reverse();
 	fList->merge(fList1);
 	fList->print();
 }
