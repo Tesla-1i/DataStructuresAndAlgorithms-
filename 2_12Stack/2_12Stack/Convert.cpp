@@ -15,12 +15,21 @@ int main(){
 	cout << "输入十进制整数n和进制base ";
 	unsigned int n; int base;
 	cin >> n >> base;
+	
 	convert(S, n, base);
+
+	bool b = S.IsEmpty();
+	if (b == false)
+		cout << "不空";
+	else
+		cout << "空";
+
 	char c;
 	while (S.top != -1){
 		S.Pop(c);
 		cout << c;
 	}
+	
 	/*Stack<int> stack;
 	cout << "输入5个整数\n";
 	for (int i = 0; i < 5; i++){

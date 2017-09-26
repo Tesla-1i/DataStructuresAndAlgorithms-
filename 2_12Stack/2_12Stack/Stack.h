@@ -23,7 +23,11 @@ public:
 					//之后，再压栈时，会将元素赋予新的值
 	}
 	bool IsEmpty(){
-		return (top == -1);
+		if (top == -1)
+			return true;
+		else
+			return false;
+		//return (top == -1);
 	}
 	bool IsFull(){
 		return (top == maxSize - 1);
