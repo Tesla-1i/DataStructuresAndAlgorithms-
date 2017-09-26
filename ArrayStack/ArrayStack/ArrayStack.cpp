@@ -23,7 +23,7 @@ template<class T>bool ArrayStack<T>::pop(T& item){
 		return false;
 	}
 	else{
-		item = st[topRank--];		//取栈顶，删除栈顶，返回原来的栈顶元素
+		item = st[topRank--];		//取栈顶，删除栈顶，返回原来的栈顶元素，不是现在栈顶的元素
 		return true;
 	}
 }
