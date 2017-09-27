@@ -41,8 +41,8 @@ template<class T>ListNode<T>* List<T>::insert(T const&e){
 
 //查找最大值，递归方法
 template<class T>T getMax(ListNode<T>* a){
-	T min = 0;
-	if (a == NULL) return min;
+	T max = -1000;
+	if (a == NULL) return max;	//最后节点的后边时
 	T value = getMax(a->succ);
 	if (a->data > value)
 		return a->data;
@@ -56,7 +56,7 @@ template<class T>int getNodeNum(ListNode<T>* a){
 }
 //计算结点数据的平均值，递归方法
 template<class T>double getAvg(ListNode<T>* a, int n){//n是结点个数
-	if (a == NULL) return 0;
+	if (a == NULL) return 0;	//最后节点的后边
 	return a->data / (double)n + getAvg(a->succ, n);
 }
 
@@ -75,7 +75,7 @@ int main(){
 	cout << "链表是： ";
 	fList->print();
 	cout << "_size = " << (fList->getSize()) << "\n";
-	ListNode<int>* l = fList->getHeader()->succ;
+	ListNode<int>* l = fList->getHeader()->succ;	//因为带有头结点
 	int max = getMax<int>(l);	//模板函数使用方法
 	cout << "max = " << max << "\n";
 	int nodeNum = getNodeNum<int>(l);

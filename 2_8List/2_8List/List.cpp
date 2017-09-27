@@ -54,21 +54,27 @@ template<class T>void List<T>::xunHuan(){
 template<class T>T List<T>::remove(T x){
 	ListNode<T> *p;
 	p = header;
-	if (trailer->data == x){
+	if ((trailer->data == x)&&(header->data!=x)){//处理末节点,要求末节点不等于头结点
 		trailer->pred->succ = header;
 		header->pred = trailer->pred;
 		trailer = trailer->pred;
 		//trailer->pred = NULL; trailer->succ = NULL; delete trailer;
 		return x;
 	}
-	while (p->succ != header){
+	while (p->succ != header){	//保证p不是尾节点
 		if (p->data == x){
+			if (p == header){
+				//如果是头结点命中，header后移
+				header = p->succ;
+			}
 			p->pred->succ = p->succ;	//先处理p的前驱和后继
 			p->succ->pred = p->pred;	
+
 			p->pred = NULL; p->succ = NULL; delete p;	//再处理p自身
 			return x;
 		}
-		p = p->succ;
+		else
+			p = p->succ;
 	}
 	return 10000;
 }

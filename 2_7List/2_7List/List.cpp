@@ -1,5 +1,3 @@
-
-
 //不带头结点的双链表
 #include<iostream>
 using namespace std;
@@ -50,13 +48,13 @@ template<class T>ListNode<T>* List<T>::insert(T const&e){
 	return trailer;
 }
 
+//捉对插入，如1.2.3.4.5.6.7.8.9
+//h=1，t=2，p=3，插入3,4，再p=5.插入5,6再p=7，插入7,8
+//剩下9，插入，再更新tail
+//h,t本来是首尾，逐渐移动导致不是了，
+//整个移动过程像一个升起的塔
+//但head还是首，需要单独确定尾
 template<class T>void List<T>::sort(){
-	//捉对插入，如1.2.3.4.5.6.7.8.9
-	//h=1，t=2，p=3，插入3,4，再p=5.插入5,6再p=7，插入7,8
-	//剩下9，插入，再更新tail
-	//h,t本来是首尾，逐渐移动导致不是了，
-	//整个移动过程像一个升起的塔
-	//但head还是首，需要单独确定尾
 	ListNode<T> *h, *t, *p, *pNextNext, *FinalTail;
 	//本链表有头结点，所以h!=head
 	h = header; t = h->succ;	//临时性的首尾，很快不是了
@@ -103,6 +101,21 @@ int main(){
 	fList->sort();
 	fList->print();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //带头双链表
 

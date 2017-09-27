@@ -110,14 +110,16 @@ template<class T>void List<T>::merge(List<T>* List1){
 		}
 	}
 	else{
-		p1 = p->succ;
-		p->succ = head;
-		head = p;
-		p = p1;
+		while (p){
+			p1 = p->succ;
+			p->succ = head;
+			head = p;
+			p = p1;
+		}
 	}
 	header = head;	//head是头指针
 
-
+	//利用第三题的倒置
 	//ListNode<T>* head, *p, *q, *p1, *q1, *temp;	//临时头结点
 	//p = header; q = List1->header;
 	//if (header->data >= List1->header->data){

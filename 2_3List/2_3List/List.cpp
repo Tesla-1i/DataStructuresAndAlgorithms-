@@ -50,14 +50,14 @@ template<class T>void List<T>::print(){
 
 
 template<class T>void List<T>::reverse(){
-	/*stack<T>* temp = new stack<T>;
-	ListNode<T>* p = header;
-	while (p != NULL){
+	/*stack<t>* temp = new stack<t>;
+	listnode<t>* p = header;
+	while (p != null){
 		temp->push(p->data);
 		p = p->succ;
 	}
 	p = header;
-	while (p != NULL){
+	while (p != null){
 		p->data = temp->top();
 		p = p->succ;
 		temp->pop();
@@ -69,7 +69,7 @@ template<class T>void List<T>::reverse(){
 	ListNode<T>* tmp = NULL;	//保存当前结点的succ
 	while (header != NULL){		
 		tmp = header->succ;		//保存当前结点next
-		header->succ = prev;	//将当前结点插入到头结点之前
+		header->succ = prev;	//将当前结点插入到头结点之前,header向后遍历，prev作为头
 		prev = header;			//插入后将当前节点设为头结点
 		header = tmp;			//下次迭代的当前结点
 	}
