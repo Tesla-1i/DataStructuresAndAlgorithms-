@@ -18,11 +18,11 @@ int main(){
 	
 	convert(S, n, base);
 
-	bool b = S.IsEmpty();
+	/*bool b = S.IsEmpty();
 	if (b == false)
 		cout << "²»¿Õ";
 	else
-		cout << "¿Õ";
+		cout << "¿Õ";*/
 
 	char c;
 	while (S.top != -1){
