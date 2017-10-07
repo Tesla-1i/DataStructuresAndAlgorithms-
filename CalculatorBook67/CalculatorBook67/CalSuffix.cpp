@@ -3,11 +3,12 @@
 
 string Calculator::infix_to_suffix(string InfixExp){
 	Stack<char> OPTR;	
-	string PostfixExp;// = NULL;
+	string PostfixExp;// = NULL;否则运行时错误
 	int i = 0;
 	char item;
 	while (InfixExp[i] != '\0'){
 		if (InfixExp[i] <= '9'&&InfixExp[i] >= '0'){
+			PostfixExp += ' ';
 			PostfixExp += InfixExp[i];
 		}
 		else if (InfixExp[i] == '('){
@@ -21,6 +22,7 @@ string Calculator::infix_to_suffix(string InfixExp){
 				while (!OPTR.IsEmpty()){
 					OPTR.Pop(item);
 					if (item != '('){	//在遇到第一个（之前进行追加
+						PostfixExp += ' ';
 						PostfixExp += item;
 					}
 					else{	//否则，不再进行追加
@@ -34,21 +36,22 @@ string Calculator::infix_to_suffix(string InfixExp){
 		}
 		else if (InfixExp[i] == '+' || InfixExp[i] == '-' || InfixExp[i] == '*' || InfixExp[i] == '/'){
 			OPTR.Top(item);
-			//运算符优先级不高于栈顶运算符的优先级
+														//运算符优先级不高于栈顶运算符的优先级
 			while (!OPTR.IsEmpty() && item != '(' && (item == '*' || item == '/' || InfixExp[i] == '+' || InfixExp[i] == '-')){
-				OPTR.Pop(item); PostfixExp += item;
+				OPTR.Pop(item); PostfixExp += ' '; PostfixExp += item;
 				OPTR.Top(item);
 			}
 			OPTR.Push(InfixExp[i]);
 		}
 		i++;
 	}
-	while (!OPTR.IsEmpty()){
+	while (!OPTR.IsEmpty()){	//扫描完中缀表达式，栈中还有元素，追加到后缀表达式
 		OPTR.Pop(item);
-		if (item == '('){
+		if (item == '('){	//还有未匹配的(说明语法错误
 			cout << "括号不匹配\n"; exit(1);
 		}
 		else{
+			PostfixExp += ' ';
 			PostfixExp += item;
 		}
 	}
@@ -76,6 +79,10 @@ double Calculator::cal_suffix(string PostfixExp){
 	Stack<double> OPND;		//操作数栈
 	double num,num1,num2;
 	while (PostfixExp[i] != '\0'){
+		if (PostfixExp[i] == ' '){
+			i++;
+			continue;	//忽略后缀表达式中的空格
+		}
 		switch (PostfixExp[i]){
 		case '1':OPND.Push(1); break;
 		case '2':OPND.Push(2); break;
