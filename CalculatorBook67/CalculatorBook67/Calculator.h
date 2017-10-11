@@ -2,6 +2,7 @@
 #include"Stack.h"
 
 //计算器初级阶段，仅仅计算一位整数数的加减乘除。
+//中缀转后缀，计算后缀表达式值
 
 #ifndef CALCULATOR
 #define CALCULATOR

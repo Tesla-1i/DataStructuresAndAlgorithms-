@@ -7,18 +7,25 @@ string Calculator::infix_to_suffix(string InfixExp){
 	int i = 0;
 	char item;
 	while (InfixExp[i] != '\0'){
+		if (InfixExp[i] == ' ')	//跳过空格
+		{
+			i++; continue;
+		}
+		//读入操作数，直接加到后缀
 		if (InfixExp[i] <= '9'&&InfixExp[i] >= '0'){
 			PostfixExp += ' ';
 			PostfixExp += InfixExp[i];
 		}
+		//读入开括号，直接压栈
 		else if (InfixExp[i] == '('){
 			OPTR.Push(InfixExp[i]);
 		}
+		//读入闭括号
 		else if (InfixExp[i] == ')'){
 			if (OPTR.IsEmpty()){
 				cout << "括号不匹配\n"; exit(1);
 			}
-			else{
+			else{//依次弹栈，弹出的元素加到后缀，直到遇到开括号(开括号不加到后缀)
 				while (!OPTR.IsEmpty()){
 					OPTR.Pop(item);
 					if (item != '('){	//在遇到第一个（之前进行追加
@@ -29,14 +36,17 @@ string Calculator::infix_to_suffix(string InfixExp){
 						break;
 					}
 				}
+				//可能情况是栈中无开括号，导致栈中元素全部弹出，肯定错了
 				if (OPTR.IsEmpty()){	//全部弹出，说明没有遇到（，括号匹配不成功。
 					cout << "括号匹配不成功\n"; exit(1);
 				}
 			}
 		}
+		//读入运算符
 		else if (InfixExp[i] == '+' || InfixExp[i] == '-' || InfixExp[i] == '*' || InfixExp[i] == '/'){
 			OPTR.Top(item);
-														//运算符优先级不高于栈顶运算符的优先级
+			//栈非空&&栈顶不是开括号&&运算符优先级不高于栈顶运算符的优先级.	反复弹出并加到后缀
+			//优先级比较：当栈顶是*或/ 或 当前运算符是 +或- 就满足条件
 			while (!OPTR.IsEmpty() && item != '(' && (item == '*' || item == '/' || InfixExp[i] == '+' || InfixExp[i] == '-')){
 				OPTR.Pop(item); PostfixExp += ' '; PostfixExp += item;
 				OPTR.Top(item);
@@ -125,7 +135,11 @@ int main(){
 	//cout << d;
 	string str1;
 	cout << "输入中缀表达式\n";
-	cin >> str1;
+	char* s = new char[20];
+	gets(s);	//输入字符串也可以有空格
+	str1 = s;
+	cout << str1;
+	//cin >> str1;
 	str = calculator.infix_to_suffix(str1);
 	cout << str << endl;
 	double d = calculator.cal_suffix(str);
