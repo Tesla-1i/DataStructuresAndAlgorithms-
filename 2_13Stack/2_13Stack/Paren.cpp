@@ -10,6 +10,7 @@ bool paren(char *exp, int lo, int hi){
 		case '(':case '[':case '{':S.Push(exp[i]);	break;
 		/*case ')':if (S.IsEmpty()) return false;
 			S.Pop(item); if ( ('(' != item)) return false; break;*/
+		//先取栈顶检查匹配，不匹配直接返回false，匹配则弹出
 		case ')'://不能先弹，再比较是否空。应该先判断，再弹出
 			S.Top(item); if (S.IsEmpty() || ('(' != item)) return false; S.Pop(item); break;
 		case ']'://不能先弹，再比较是否空
