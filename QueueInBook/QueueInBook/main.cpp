@@ -11,6 +11,9 @@ int main(){
 			break;
 	}
 	cout << "结束\n";
+	cout << "队列元素个数: ";
+	int num = queue.GetSize();
+	cout << num << endl;
 	while (1){
 		cout << "出队\n";
 		float item;

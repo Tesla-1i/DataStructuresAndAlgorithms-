@@ -14,7 +14,7 @@ private:
 	int rear;	//队尾位置下标
 	T *queue;	//存放T类型数据的数组
 public:
-	Queue(int size = 4){
+	Queue(int size = 20){
 		maxSize = size + 1;	//多出一个空间，区分空与满
 		queue = new T[maxSize];
 		front = rear = 0;
@@ -28,6 +28,17 @@ public:
 	bool EnQueue(T item);	//入队，队尾加入新元素
 	bool DeQueue(T& item);	//出队，取出第一个元素，并删除（不是真删除）
 	bool GetFront(T& item);	//读取队头，不删除
+	bool IsEmpty(){
+		if (front == rear)	return true;
+		else	return false;
+	}
+	bool IsFull(){
+		if ((rear + 1) % (maxSize) == front)	return true;
+		else	return false;
+	}
+	int GetSize(){
+		return ((rear - front + maxSize) % maxSize);	//返回队列中元素个数
+	}
 };
 
 #endif
