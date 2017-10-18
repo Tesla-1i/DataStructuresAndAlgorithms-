@@ -7,8 +7,8 @@ using namespace std;
 #ifndef USER
 #define USER
 
-int serveTime = 4;
-int timeInterval = 2;
+int serveTime = 4;	//服务时间 4s
+int timeInterval = 2;	//时间间隔
 
 class User{
 public:

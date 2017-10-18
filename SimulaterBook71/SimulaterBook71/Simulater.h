@@ -13,7 +13,7 @@ public:
 	vector<OfficialBankWindow> obw;
 	Simulater(){}
 	bool isServed(int time, User user){
-		if (time - user.serverTime >= 4)
+		if (time - user.serverTime >= serveTime)
 			return true;
 		return false;
 	}
@@ -53,14 +53,14 @@ void Simulater::callCustomer(User& user, BankWindow& bankWindow, int time){
 }
 void Simulater::simulaterCallCustomer(int time){
 	for (int i = 0; i < nbw.size(); i++){
-		if (nbw[i].isBusy&&this->isServed(time, nbw[i].client) || !(nbw[i].isBusy)){
+		if ((nbw[i].isBusy&&this->isServed(time, nbw[i].client)) || !(nbw[i].isBusy)){
 			if (nbw[i].isBusy&&this->isServed(time, nbw[i].client)){
 				nbw[i].client.getServed();
 			}
 			nbw[i].isBusy = false;
 			nbw[i].client.id = -1;
-			if (!NormalUserQueue.empty()){
-				NormalUser nuser = NormalUserQueue.front();
+			if (!this->NormalUserQueue.empty()){
+				NormalUser nuser = this->NormalUserQueue.front();
 				this->NormalUserQueue.pop();
 				this->callCustomer(nuser, nbw[i], time);
 			}
@@ -70,14 +70,14 @@ void Simulater::simulaterCallCustomer(int time){
 		}
 	}
 	for (int i = 0; i < vbw.size(); i++){
-		if (vbw[i].isBusy&&this->isServed(time, vbw[i].client) || !(vbw[i].isBusy)){
+		if ((vbw[i].isBusy&&this->isServed(time, vbw[i].client)) || !(vbw[i].isBusy)){
 			if (vbw[i].isBusy&&this->isServed(time, vbw[i].client)){
 				vbw[i].client.getServed();
 			}
 			vbw[i].isBusy = false;
 			vbw[i].client.id = -1;
 			if (this->VIPUserQueue.empty()){
-				if (!NormalUserQueue.empty()){
+				if (!this->NormalUserQueue.empty()){
 					NormalUser nuser = this->NormalUserQueue.front();
 					this->NormalUserQueue.pop();
 					this->callCustomer(nuser, vbw[i], time);
@@ -94,7 +94,7 @@ void Simulater::simulaterCallCustomer(int time){
 		}
 	}
 	for (int i = 0; i < obw.size(); i++){
-		if (obw[i].isBusy&&this->isServed(time, obw[i].client) || !(obw[i].isBusy)){
+		if ((obw[i].isBusy&&this->isServed(time, obw[i].client)) || !(obw[i].isBusy)){
 			if (obw[i].isBusy&&this->isServed(time, obw[i].client)){
 				obw[i].client.getServed();
 			}
@@ -133,7 +133,7 @@ void Simulater::initialize(){
 	obw.push_back(obw1);
 }
 void Simulater::simulate(){
-	int id = 1;
+	int id = 1;	//真正用户的id
 	initialize();
 	for (int i = 0; i <= 12; i += timeInterval){
 		cout << i << "s: \n";
