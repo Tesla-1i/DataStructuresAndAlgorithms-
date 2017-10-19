@@ -1,0 +1,3 @@
+F:/G/Data Structures and Algorithms/Polynomial/cmake-build-debug/CMakeFiles/Polynomial.dir
+F:/G/Data Structures and Algorithms/Polynomial/cmake-build-debug/CMakeFiles/edit_cache.dir
+F:/G/Data Structures and Algorithms/Polynomial/cmake-build-debug/CMakeFiles/rebuild_cache.dir
