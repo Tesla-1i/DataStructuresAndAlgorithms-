@@ -4,7 +4,7 @@ int main() {
 
 	TextEditor text;
 	cout << "测试输入流,输入三行文本\n";
-	for (int ii = 0; ii < 3; ii++)
+	for (int ii = 0; ii < 3; ii++) 
 		cin >> text;
 	cout << "测试输出流\n";
 	cout << text;
@@ -13,6 +13,17 @@ int main() {
 	text.WordStat(a1, a2, a3, a4, a5);
 	cout << "总数 字母 数字 空格 标点\n";
 	cout << a1 << " " << a2 << " " << a3 << " " << a4 << " " << a5 << "\n";
+	cout << "字符总数 " << text.total << "\n";
+	text.cursor.line = text.article.size();
+	list<string>::iterator itt = text.article.end();
+	itt--;
+	text.cursor.offset = (*itt).length();
+	cout << "光标位置 " << text.cursor.line << " " << text.cursor.offset << "\n";
+	cout << "测试移动光标，输入参考位置(1,2,3)和偏移量: ";
+	int ori, off;
+	cin >> ori >> off;
+	text.MoveCursor(ori, off);
+	cout << "光标位置 " << text.cursor.line << " " << text.cursor.offset << "\n";
 	cout << "输入插入的文本\n";
 	string s;
 	cin >> s;
@@ -25,7 +36,7 @@ int main() {
 	Cursor c(0, 0);
 	bool b = text.FindText(ss, c);
 	if (b == true) {
-		cout << "子串的位置: ";
+		cout << "第一个子串的位置: ";
 		cout << c.line << " " << c.offset;
 		cout << "\n删除输入的子串\n";
 		text.DeleteText(ss);

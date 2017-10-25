@@ -45,7 +45,7 @@ public:
 
 	//追加，插入文本；查找文本；删除文本
 	//void AddText(string &text);
-	void InsertText(string& text);	//在光标处插入文本,(现在实际情况行末插入多行)
+	void InsertText(string& text);	//在光标处插入文本,(现在实际行末插入多行，但无法输入多行只插一行)
 	bool FindText(string& text,Cursor& cursor);
 	bool DeleteText(string& text);	//先查找匹配后，再删除
 	bool DeleteText(Cursor origin,int length);	//从给定光标（位置,不是文档的光标）处删除length个字符
@@ -229,8 +229,11 @@ ostream & operator<<(ostream & out, TextEditor & editor)
 istream & operator>>(istream & in, TextEditor & editor)
 {
 	string s;
-	in >> s;
-	editor.article.push_back(s);
+	//in >> s;
+	char cs[20];
+	gets_s(cs);
+	editor.article.push_back(cs);
+	editor.total += strlen(cs);	//改变字符总数
 	return in;
 }
 
