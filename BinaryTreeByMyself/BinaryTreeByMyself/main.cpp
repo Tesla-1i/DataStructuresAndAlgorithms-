@@ -1,7 +1,7 @@
 #include"Bintree.h"
 
 int main() {
-	cout << "节点个数: ";
+	cout << "节点个数（5）: ";
 	int num; cin >> num;
 	BinaryTreeNode<float>* bt = new BinaryTreeNode<float>[num];
 	cout << "输入节点数据\n";
@@ -21,4 +21,8 @@ int main() {
 	btTree.levelOrder(btTree.root);
 	cout << "前序遍历\n";
 	btTree.preOrder(btTree.root);
+	cout << "中序遍历\n";
+	btTree.inOrder(btTree.root);
+	cout << "后序遍历\n";
+	btTree.postOrder(btTree.root);
 }
