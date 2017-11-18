@@ -24,5 +24,5 @@ int main() {
 	BinaryTree<char>* bt1 = new BinaryTree<char>;
 	bt1->createTree(bt1->createTreeByPreInOrder(a1, 0, l - 1, b1, 0, l - 1));
 	cout << "ºóÐòÐòÁÐ\n";
-	bt1->postOrder(bt->root);
+	bt1->postOrder(bt1->root);
 }
