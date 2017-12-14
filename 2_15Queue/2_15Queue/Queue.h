@@ -26,6 +26,7 @@ public:
 	}
 	void Clear(){
 		front = rear;	//清空队列，不是真的清空
+		tag = 0;
 	}
 	bool EnQueue(T item);	//入队，队尾加入新元素
 	bool DeQueue(T& item);	//出队，取出第一个元素，并删除（不是真删除）
