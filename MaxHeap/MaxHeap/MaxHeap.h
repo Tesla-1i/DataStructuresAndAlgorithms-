@@ -17,6 +17,8 @@ public:
 	void siftUp(int position);	//从position向上开始调整，使序列成堆
 	void removeMax(T& max);		//从堆顶删除最大值,------优先队列的出队操作
 	bool insert(T& value);	//插入新节点
+	void removeByIndex(T& in);	//删除任意结点,通过索引
+	void removeByValue(T& va);	//删除任意结点,通过值
 };
 
 #endif // !MAXHEAP
@@ -29,7 +31,7 @@ template<class T>void MaxHeap<T>::siftDown(int left) {
 	int i = left;	//标识父节点
 	int j = 2 * i + 1;	//标识左子节点
 	T temp = heapArray[i];	//保存父节点的关键码
-	while (j < currentSize) {
+	while (j < currentSize) {	//有左孩子
 		if ((j < currentSize - 1) && (heapArray[j] < heapArray[j + 1])) {
 			j++;
 		//该节点有右孩子且右孩子的关键码大于左孩子的关键码时，j指向右子节点
@@ -62,6 +64,33 @@ template<class T>void MaxHeap<T>::removeMax(T& max) {	//实质是删除堆顶元素
 	}
 }
 
+template<class T>void MaxHeap<T>::removeByIndex(T& in) {
+	if (in < 0 || in >= currentSize) {
+		cout << "索引溢出,退出程序\n";	exit(1);
+	}
+	if (in == currentSize - 1) {
+		currentSize--;	//删除最后一个
+		return;
+	}
+	heapArray[in] = heapArray[currentSize - 1];	//替换
+	currentSize--;
+	if (currentSize > 1) {
+		siftDown(in);
+		siftUp(in);
+	}
+}
+
+template<class T>void MaxHeap<T>::removeByValue(T& va) {
+	int i = 0;
+	for (i = 0; i < currentSize; i++) {
+		if (heapArray[i] == va) break;
+	}
+	if (i >= currentSize) {
+		cout << "没有匹配的值\n";	return;
+	}
+	removeByIndex(i);
+}
+
 template<class T>bool MaxHeap<T>::insert(T& value) {
 	if (currentSize >= maxSize) {
 		cout << "最大堆容量已满\n";	return false;
@@ -85,3 +114,4 @@ template<class T>void MaxHeap<T>::siftUp(int position) {
 		}
 	}
 }
+
