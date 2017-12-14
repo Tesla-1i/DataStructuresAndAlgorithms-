@@ -47,16 +47,18 @@ public:
 
 	//判断二叉树是不是搜索树
 	bool judgeTree(BinaryTreeNode<T>* root);
-	T maxValue(BinaryTreeNode<T>* root) {
-		while (root->rightChild)
-			root = root->rightChild;
-		return root->data;
-	}
-	T minValue(BinaryTreeNode<T>* root) {
-		while (root->leftChild)
-			root = root->leftChild;
-		return root->data;
-	}
+	T maxValue(BinaryTreeNode<T>* root);
+	T minValue(BinaryTreeNode<T>* root);
+	//T maxValue(BinaryTreeNode<T>* root) {
+	//	while (root->rightChild)
+	//		root = root->rightChild;
+	//	return root->data;
+	//}
+	//T minValue(BinaryTreeNode<T>* root) {
+	//	while (root->leftChild)
+	//		root = root->leftChild;
+	//	return root->data;
+	//}
 };
 
 #endif // !BINTRE
@@ -141,6 +143,45 @@ template<class T>void BinaryTree<T>::inOrder(BinaryTreeNode<T>* root) {
 			nodeStack.pop();
 		}
 	}
+}
+template<class T>T BinaryTree<T>::maxValue(BinaryTreeNode<T>* root) {
+	//利用中序遍历查找最大值
+	T maxValue = (T)(0);
+	stack<BinaryTreeNode<T>*> nodeStack;
+	BinaryTreeNode<T>* pointer = root;
+	while (!nodeStack.empty() || pointer) {
+		if (pointer) {
+			nodeStack.push(pointer);
+			pointer = pointer->leftChild;
+		}
+		else {
+			pointer = nodeStack.top();
+			if (maxValue < pointer->data)
+				maxValue = pointer->data;
+			pointer = pointer->rightChild;
+			nodeStack.pop();
+		}
+	}
+	return maxValue;
+}
+template<class T>T BinaryTree<T>::minValue(BinaryTreeNode<T>* root) {
+	T minValue = (T)(1000);
+	stack<BinaryTreeNode<T>*> nodeStack;
+	BinaryTreeNode<T>* pointer = root;
+	while (!nodeStack.empty() || pointer) {
+		if (pointer) {
+			nodeStack.push(pointer);
+			pointer = pointer->leftChild;
+		}
+		else {
+			pointer = nodeStack.top();
+			if (minValue > pointer->data)
+				minValue = pointer->data;
+			pointer = pointer->rightChild;
+			nodeStack.pop();
+		}
+	}
+	return minValue;
 }
 
 template<class T>void BinaryTree<T>::postOrder(BinaryTreeNode<T>* root) {

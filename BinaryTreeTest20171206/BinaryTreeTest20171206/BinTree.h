@@ -47,6 +47,7 @@ public:
 	//统计叶子节点个数
 	int leaf(BinaryTreeNode<T>* root);
 	//输出二叉搜索树大于K的所有值
+	T BinaryTree<T>::maxValue(BinaryTreeNode<T>* root);
 	void searchBiggerNode(BinaryTreeNode<T>* root,T& k);
 	//判断二叉树是否是二叉搜索树
 	//bool judgeTree(BinaryTreeNode<T>* root);
@@ -286,8 +287,32 @@ template<class T>int BinaryTree<T>::leaf(BinaryTreeNode<T>* root) {
 	}
 }
 
+template<class T>T BinaryTree<T>::maxValue(BinaryTreeNode<T>* root) {
+	//利用中序遍历查找最大值
+	T maxValue = (T)(0);
+	stack<BinaryTreeNode<T>*> nodeStack;
+	BinaryTreeNode<T>* pointer = root;
+	while (!nodeStack.empty() || pointer) {
+		if (pointer) {
+			nodeStack.push(pointer);
+			pointer = pointer->leftChild;
+		}
+		else {
+			pointer = nodeStack.top();
+			if (maxValue < pointer->data)
+				maxValue = pointer->data;
+			pointer = pointer->rightChild;
+			nodeStack.pop();
+		}
+	}
+	return maxValue;
+}
 //借用中序遍历得到搜索树的关键码序列,再输出大于k的关键码
 template<class T>void BinaryTree<T>::searchBiggerNode(BinaryTreeNode<T>* root,T & k) {
+
+	//T maxOfLeft = maxValue(root->leftChild);
+	//if(maxOfLeft)
+
 	stack<BinaryTreeNode<T>*> nodeStack;
 	BinaryTreeNode<T>* pointer = root;
 	while (!nodeStack.empty() || pointer)

@@ -3,17 +3,17 @@
 #include"BinTree.h"
 
 int main() {
-	cout << "请输入字符前序序列长度: ";
+	cout << "请输入数字前序序列长度: ";
 	int l; cin >> l;
-	cout << "请依次输入各个字符,按前序序列\n";
-	char *a1 = new char[l];
+	cout << "请依次输入各个数字,按前序序列\n";
+	int *a1 = new int[l];
 	for (int i = 0; i < l; i++)
 		cin >> (a1[i]);
-	cout << "请依次输入字符，按中序序列\n";
-	char *b1 = new char[l];
+	cout << "请依次输入数字，按中序序列\n";
+	int *b1 = new int[l];
 	for (int i = 0; i < l; i++)
 		cin >> (b1[i]);
-	BinaryTree<char>* bt1 = new BinaryTree<char>;
+	BinaryTree<int>* bt1 = new BinaryTree<int>;
 	bt1->createTree(bt1->createTreeByPreInOrder(a1, 0, l - 1, b1, 0, l - 1));
 	bool isSearchTree = bt1->judgeTree(bt1->root);
 	if (isSearchTree)
