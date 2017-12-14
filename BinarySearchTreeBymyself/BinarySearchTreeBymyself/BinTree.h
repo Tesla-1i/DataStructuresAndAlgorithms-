@@ -136,10 +136,10 @@ template<class T>BinaryTreeNode<T>* BinaryTree<T>::searchNode(T& x) {
 }
 
 template<class T>void BinaryTree<T>::insertNode(T& x) {
-	BinaryTreeNode<T>* pre = NULL;
+	BinaryTreeNode<T>* pre = NULL;	//pre是p的父节点
 	BinaryTreeNode<T>* p = root;
 	while (p) {
-		pre = p;
+		pre = p;	
 		if (p->data > x)
 			p = p->leftChild;
 		else
@@ -158,9 +158,33 @@ template<class T>void BinaryTree<T>::insertNode(T& x) {
 
 //复制删除
 template<class T>bool BinaryTree<T>::deleteNode(T& x) {
+	
+	//BinaryTreeNode<T>* node = new BinaryTreeNode<T>;
+	//node->data = x;
+	//BinaryTreeNode<T>* previous, *tmp = node;
+	//if (node->rightChild == NULL)
+	//	node = node->leftChild;
+	//else if (node->leftChild == NULL)
+	//	node = node->rightChild;
+	//else {
+	//	tmp = node->leftChild;
+	//	previous = node;
+	//	while (tmp->rightChild) {
+	//		previous = tmp;
+	//		tmp = tmp->rightChild;
+	//	}
+	//	node->data = tmp->data;
+	//	if (previous == node)
+	//		previous->leftChild = tmp->leftChild;
+	//	else
+	//		previous->rightChild = tmp->leftChild;
+	//}
+	//delete tmp;
+	//return true;
 	//找到结点
-	BinaryTreeNode<T>* pre = NULL;
-	BinaryTreeNode<T>* p = root;
+	BinaryTreeNode<T>* pre = NULL;	//p的父节点是pre
+	BinaryTreeNode<T>* p = new BinaryTreeNode<T>;
+	p = root;
 	while (p) {
 		pre = p;
 		if (p->data > x)
@@ -179,10 +203,12 @@ template<class T>bool BinaryTree<T>::deleteNode(T& x) {
 		else
 			pre->leftChild = NULL;
 		delete p;
+		cout << "删除叶子节点成功\n";
 	}
 	else if ((p->leftChild == NULL) || (p->rightChild == NULL)) {
 		//只有一个孩子
-		BinaryTreeNode<T>* child;	//p的孩子
+		BinaryTreeNode<T>* child;
+		//BinaryTreeNode<T>* child;	//p的孩子
 		if (p->leftChild)
 			child = p->leftChild;
 		else
@@ -192,6 +218,7 @@ template<class T>bool BinaryTree<T>::deleteNode(T& x) {
 		else
 			pre->leftChild = child;
 		delete p;
+		cout << "删除只有一个孩子的结点成功\n";
 	}
 	else {	//有两个孩子，找左边最大的一个，来替换
 		BinaryTreeNode<T>* q = p->leftChild;
@@ -218,9 +245,9 @@ template<class T>bool BinaryTree<T>::deleteNode(T& x) {
 				pre->leftChild = q->leftChild;
 			delete q;
 		}
+		cout << "删除有两个孩子的结点成功\n";
 	}
 	return true;
 }
-
 
 

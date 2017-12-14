@@ -21,10 +21,13 @@ int main() {
 	cin >> v;
 	bool b = btree->deleteNode(v);
 	if (b) {
-		cout << "广度优先遍历\n";
+		//cout << "广度优先遍历\n";
+		//btree->levelOrder(btree->root);
+		//btree->preOrder(btree->root);
+	}
+	else {
+		cout << "删除失败，不存在值\n";
 		btree->levelOrder(btree->root);
 	}
-	else
-		cout << "删除失败，不存在值\n";
 	return 0;
 }
