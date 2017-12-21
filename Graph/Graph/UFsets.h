@@ -40,7 +40,8 @@ void UFSets::Union(int v, int u) {
 		for (j = next[rt]; j != rt; j = next[j])
 			root[j] = root[u];
 		swap(next[rt], next[root[u]]);
-		//将两个等价类的元素连接起来
+		//将两个等价类的元素连接起来,
+		//将两个等价类的代表元素的next元素交换就可以实现两个等价类合并,参考课本的图示
 	}
 	else {
 		int rt = root[u];

@@ -248,7 +248,7 @@ Edge<T>* Graph<T>::Prim(int s)
 	}
 	//delete[] neighbor;
 	//delete[] nearest;
-	cout << "Prim算法的输出结果\n";
+	cout << "Prim算法的输出结果(图4-15)\n";
 	for (i = 0; i < n - 1; i++)
 		cout << "<" << MST[i].start << " , " << MST[i].end << "> " << MST[i].weight << "\t";
 	return MST;
@@ -367,7 +367,7 @@ template<class T>void Graph<T>::Kruskal() {
 			}
 		}
 	}
-	cout << "\nKruskal算法的输出结果\n";
+	cout << "\nKruskal算法的输出结果(图4-17)\n";
 	for (int i = 0; i < edgeNum; i++) {
 		cout << "<" << MST[i].start << " , " << MST[i].end << "> " << MST[i].weight << "\t";
 	}
@@ -408,6 +408,7 @@ template<class T>void Graph<T>::Dijkstra(int s, T *D, int *Path) {
 			}
 		}
 	}
+	cout << "\nDjikstra算法(图4-18)";
 	cout << "\n最短路径长度\n";
 	for (i = 0; i < n; i++)
 		cout << D[i] << "\t";
@@ -459,9 +460,9 @@ template<class T>void Graph<T>::Floyd(Graph<T>& G, T ** Adj, int ** Path){
 	//如果两个顶点ij间最短经过v的路径,且adj[i][j]>(adj[i][v]+adj[v][j]),
 	//则更新adj[i][j]和path[i][j]
 	//三层循环
-	for (v = 0; v < n; v++) {
-		for (i = 0; i < n; i++) {
-			for (j = 0; j < n; j++) {
+	for (v = 0; v < n; v++) {	//允许经过的中转顶点v(v自0到n-1变大)
+		for (i = 0; i < n; i++) {	//矩阵的i行
+			for (j = 0; j < n; j++) {	//矩阵的j列
 				if (Adj[i][j] > (Adj[i][v] + Adj[v][j])) {
 					Adj[i][j] = Adj[i][v] + Adj[v][j];	//更新最短路径
 					Path[i][j] = v;		//更新前驱(中转站)
@@ -511,7 +512,7 @@ template<class T>void Graph<T>::TologySortDisplay() {
 	int n = vertexNum;
 	int *sortArray =new int[n];
 	if (TopologySort(sortArray)) {
-		cout << "没有回路,拓扑序列是\n";
+		cout << "没有回路,拓扑序列是(图4-18)\n";
 		for (int i = 0; i < n; i++) {
 			cout << sortArray[i] << "\t";
 		}
@@ -519,7 +520,7 @@ template<class T>void Graph<T>::TologySortDisplay() {
 	}
 	else {
 		Edge<T> e;
-		cout << "有回路存在,一个回路是\n";
+		cout << "有回路存在,一个回路是(图4-18)\n";
 		for (int i = 0; i < n; i++) {
 			for (e = firstEdge(i); isEdge(e); e = nextEdge(e)) {
 				if (Mark[e.end] == 0)
@@ -588,12 +589,14 @@ template<class T>void Graph<T>::Poquan() {
 		if (!Liantong()) {
 			//删除最大边后原图不再联通了,则恢复最大边
 			//因为我们求得是最小生成树,每个点均连通
+			//此时说明这个最大边是桥不是圈上的最大边
+			//否则,删除的边正是圈上的最大边
 			matrix[e.start][e.end] = weight1;
 			matrix[e.end][e.start] = weight2;
 		}
 		//或者判断从一个结点开始遍历，如果遍历过程中还会回到已经访问过的结点，则证明存在环，然后去除环中最大边
 	}
-	cout << "破圈法求得的最小生成树\n";
+	cout << "破圈法求得的最小生成树(图4-15)\n";
 	for (v = 0; v < vertexNum; v++) {
 		for (e = firstEdge(v); isEdge(e); e = nextEdge(e)) {
 			if (e.start < e.end) {

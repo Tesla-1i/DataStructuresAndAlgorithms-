@@ -1,19 +1,19 @@
 #include"Graph.h"
 int main() {
-	Graph<int> *graph1 = new Graph<int>(8);	//要求无向图
-	graph1->setEdge(0, 1, 1);
-	graph1->setEdge(1, 3, 1);
-	graph1->setEdge(1, 4, 1);
-	graph1->setEdge(3, 7, 1);
-	graph1->setEdge(4, 7, 1);
-	graph1->setEdge(0, 2, 1);
-	graph1->setEdge(2, 5, 1);
-	graph1->setEdge(2, 6, 1);
-	graph1->setEdge(5, 6, 1);
-	cout << "深度优先搜索树\n";
-	graph1->DFSTraverse();
-	cout << "广度优先搜索树\n";
-	graph1->BFSTraverse();
+	//Graph<int> *graph1 = new Graph<int>(8);	//要求无向图
+	//graph1->setEdge(0, 1, 1);
+	//graph1->setEdge(1, 3, 1);
+	//graph1->setEdge(1, 4, 1);
+	//graph1->setEdge(3, 7, 1);
+	//graph1->setEdge(4, 7, 1);
+	//graph1->setEdge(0, 2, 1);
+	//graph1->setEdge(2, 5, 1);
+	//graph1->setEdge(2, 6, 1);
+	//graph1->setEdge(5, 6, 1);
+	//cout << "深度优先搜索树\n";
+	//graph1->DFSTraverse();
+	//cout << "广度优先搜索树\n";
+	//graph1->BFSTraverse();
 
 	//cout << "输入要加边的两个顶点的索引\n";
 	//int f1, f2;
@@ -86,13 +86,14 @@ int main() {
 	//int *Adj = new int[3];
 	//Adj[0] = new int[3];
 	int n = 3;
-	int **adj = new int*[n];
+	int **adj = new int*[n];	//二维数组的定义方式
 	for (int i = 0; i < n; i++)
 		adj[i] = new int[n];
 	int **path = new int*[n];
 	for (int i = 0; i < n; i++)
 		path[i] = new int[n];
 	graph4->Floyd(*graph4, adj, path);
+	cout << "Floyd算法(图4-20)";
 	cout << "Adj数组\n";
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++)
@@ -105,7 +106,7 @@ int main() {
 			cout << path[i][j] << "\t";
 		cout << "\n";
 	}
-	graph4->TologySortDisplay();
+	graph3->TologySortDisplay();
 	cout << "////////////////\n";
 	//graph2->Poquan();
 	Graph <int> tu2(6);
